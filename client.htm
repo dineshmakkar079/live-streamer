@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+            var socket = io.connect("http://192.175.7.66:8000");
+            $(document).ready(function(){
+            	function myFunction(resp) {
+				    var cont = resp.responseText;
+				    document.getElementById("image").src="data:image/png;base64,"+cont;
+				}
+
+				function displayCD() {
+				    var xmlhttp = new XMLHttpRequest();
+				    xmlhttp.onreadystatechange = function() {
+				        if (this.readyState == 4 && this.status == 200) {
+				            myFunction(this);
+				        }
+				    };
+				    xmlhttp.open("GET", "http://192.175.7.66:8000/take/", true);
+				    xmlhttp.send();
+				}
+				setInterval(displayCD, 100);
+
+                $(document).mousemove(function(event){ 
+                	let virty = parseInt(event.pageY )//* 768 / 755);
+                	let virtx = parseInt(event.pageX )//* 1366 / 1350);
+                    socket.emit('movie',{x : virtx , y : virty});
+                });
+                $(document).on('scroll', function(){
+				   console.log('Event Fired');
+				});
+                $(document).dblclick(function(){
+				    socket.emit('dblclick');
+				});
+                $(document).mousedown(function(event){
+                	if(event.which == 1)
+                		socket.emit('lclick');
+                	else if(event.which == 3)
+                		socket.emit('rclick');
+                	else if(event.which == 2)
+                		socket.emit('sclick');
+                });
+                $('document').bind('mousewheel', function(e) {
+				    if(e.originalEvent.wheelDelta / 120 > 0) {
+				        socket.emit('scrollup');
+				    } else {
+				        socket.emit('scrolldown');
+				    }
+				});
+                document.onkeydown = function(e){
+				    e = e || event;
+				    switch(e.keyCode){
+				    	case 8 : socket.emit('backspace');
+				    	case 9 : socket.emit('tab');
+				    	case 13 : socket.emit('enter');
+				    	case 17 : socket.emit('control');
+				    	case 18 : socket.emit('alt');
+				    	case 27 : socket.emit('escape');
+				    	case 32 : socket.emit('space');
+				    	case 33 : socket.emit('pageup');
+				    	case 34 : socket.emit('pagedown');
+				    	case 35 : socket.emit('end');
+				    	case 36 : socket.emit('home');
+				    	case 37 : socket.emit('left');
+				    	case 38 : socket.emit('up');
+				    	case 39 : socket.emit('right');
+				    	case 40 : socket.emit('down');
+				    	case 46 : socket.emit('delete');
+
+				    }
+				}
+                document.onkeypress = function(e){
+                	e = e || event;
+                	socket.emit('type',{char : String.fromCharCode(e.keyCode)});
+                }
+            });
+        </script>
+    </head>
+    <body style="overflow:hidden;padding:0px;margin:0px">
+		<img id="image" style="margin-0px;max-width: 100%;max-height: 100%" alt="image" src="">
+	</body>
+</html>
