@@ -9,14 +9,14 @@ var base64 = (file)=>{
 }
 
 app.get('/', (req,res)=>{
-  var proc = exec("scrot photo.jpg" , ()=>{
+  var proc = exec("scrot /home/makkar/Desktop/linux/screen/photo.jpg" , ()=>{
     res.send(base64('/home/makkar/Desktop/linux/screen/photo.jpg'));
   })
 });
 
 app.get('/start/' , (req,res)=>{
-	var proc = exec("scrot photo.jpg" , ()=>{
-    res.sendFile('/home/makkar/Desktop/linux/screen/image.htm');
+	var proc = exec("scrot /home/makkar/Desktop/linux/screen/photo.jpg" , ()=>{
+    res.sendFile('/home/makkar/Desktop/linux/controller/client.htm');
   })
 })
 
@@ -24,5 +24,5 @@ process.on('exit', ()=>{
   proc.kill();
 })
 
-app.listen(12331);
-console.log('Server up at ', 12331);
+app.listen(8001);
+console.log('Server up at ', 8001);

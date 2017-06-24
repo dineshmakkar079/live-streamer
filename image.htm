@@ -1,7 +1,5 @@
 <html>
 <script>
-
-
 function myFunction(resp) {
     var cont = resp.responseText;
     document.getElementById("image").src="data:image/png;base64,"+cont;
@@ -14,10 +12,9 @@ function displayCD() {
             myFunction(this);
         }
     };
-    xmlhttp.open("GET", "http://192.175.7.66:12331/", true);
+    xmlhttp.open("GET", "http://192.168.2.41:8001/", true);
     xmlhttp.send();
 }
-
 setInterval(displayCD, 50);
 </script>
 <body>
